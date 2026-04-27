@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Serviços — Semana do dia 20 de Abril</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "DM Sans", sans-serif; background: #ffffff; color: #1a1a2e; padding: 24px 28px; }
+
+  .header { background: #6B3FA0; border-radius: 14px; padding: 14px 22px; display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+  .header-title { color: #fff; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; display: flex; align-items: center; gap: 10px; }
+  .header-title img { width: 36px; height: 36px; object-fit: contain; flex-shrink: 0; }
+
+  .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
+  .kpi-card { border-radius: 11px; padding: 12px 14px; }
+  .kpi-label { font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px; }
+  .kpi-value { font-size: 28px; font-weight: 600; line-height: 1; }
+  .kpi-sub { font-size: 10px; margin-top: 3px; opacity: 0.75; }
+  .kpi-blue { background: #E6F1FB; } .kpi-blue .kpi-label { color: #185FA5; } .kpi-blue .kpi-value { color: #0C447C; }
+  .kpi-red { background: #FCEBEB; } .kpi-red .kpi-label { color: #A32D2D; } .kpi-red .kpi-value { color: #791F1F; }
+  .kpi-amber { background: #FAEEDA; } .kpi-amber .kpi-label { color: #854F0B; } .kpi-amber .kpi-value { color: #633806; }
+  .kpi-gray { background: #F1EFE8; } .kpi-gray .kpi-label { color: #5F5E5A; } .kpi-gray .kpi-value { color: #2C2C2A; }
+  .kpi-green { background: #EAF3DE; } .kpi-green .kpi-label { color: #3B6D11; } .kpi-green .kpi-value { color: #27500A; }
+
+  /* TABS */
+  .tabs-nav { display: flex; gap: 0; margin-bottom: 0; }
+  .tab-btn { padding: 8px 20px; font-size: 11px; font-weight: 600; color: #888780; background: #F8F7F4; border: 1px solid #E8E6DF; border-bottom: none; border-radius: 10px 10px 0 0; cursor: pointer; letter-spacing: 0.04em; text-transform: uppercase; transition: all 0.15s; }
+  .tab-btn.active { background: #fff; color: #6B3FA0; border-bottom: 1px solid #fff; margin-bottom: -1px; z-index: 1; }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* SHARED TABLE */
+  .detail-section { border: 1px solid #E8E6DF; border-radius: 0 13px 13px 13px; overflow: hidden; }
+  .detail-header { background: #F8F7F4; padding: 9px 16px; font-size: 9.5px; font-weight: 600; color: #888780; text-transform: uppercase; letter-spacing: 0.07em; border-bottom: 1px solid #E8E6DF; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+  thead th { background: #FAFAF8; color: #888780; font-weight: 600; font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.05em; padding: 7px 12px; text-align: left; border-bottom: 1px solid #E8E6DF; }
+  tbody td { padding: 7px 12px; border-bottom: 1px solid #F1EFE8; color: #2C2C2A; vertical-align: middle; line-height: 1.4; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover td { background: #FAFAF8; }
+
+  /* DETALHAMENTO COL WIDTHS */
+  .t-det th:nth-child(1) { width: 17%; } .t-det th:nth-child(2) { width: 8%; }
+  .t-det th:nth-child(3) { width: 12%; } .t-det th:nth-child(4) { width: 10%; }
+  .t-det th:nth-child(5) { width: 10%; } .t-det th:nth-child(6) { width: 43%; }
+
+  /* MOTIVOS COL WIDTHS */
+  .t-mot th:nth-child(1) { width: 20%; } .t-mot th:nth-child(2) { width: 18%; } .t-mot th:nth-child(3) { width: 62%; }
+
+  /* API COL WIDTHS */
+  .t-api th:nth-child(1) { width: 9%; } .t-api th:nth-child(2) { width: 11%; }
+  .t-api th:nth-child(3) { width: 20%; } .t-api th:nth-child(4) { width: 12%; }
+  .t-api th:nth-child(5) { width: 48%; }
+
+  /* BADGES */
+  .badge { display: inline-block; font-size: 9.5px; font-weight: 600; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
+  .badge-desc { background: #FCEBEB; color: #A32D2D; }
+  .badge-trat { background: #FAEEDA; color: #854F0B; }
+  .badge-invis { background: #F1EFE8; color: #5F5E5A; }
+  .badge-vis { background: #EAF3DE; color: #3B6D11; }
+  .badge-retirado { background: #FCEBEB; color: #A32D2D; }
+  .badge-conv { background: #EEEDFE; color: #3C3489; }
+  .badge-aberto { background: #E6F1FB; color: #185FA5; }
+  .badge-espera { background: #FAEEDA; color: #854F0B; }
+  .motivo-tag { display: inline-block; font-size: 9.5px; font-weight: 600; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
+  .mt-balcao   { background: #E6F1FB; color: #185FA5; }
+  .mt-reajuste { background: #FAEEDA; color: #854F0B; }
+  .mt-portes   { background: #EEEDFE; color: #3C3489; }
+  .mt-contato  { background: #F1EFE8; color: #5F5E5A; }
+  .mt-apurando { background: #FFF3CD; color: #7A5200; }
+  .mt-negou    { background: #FCEBEB; color: #A32D2D; }
+  .mt-cobrou   { background: #EEEDFE; color: #3C3489; }
+  .mt-tosou    { background: #FFF3CD; color: #7A5200; }
+  .mt-naolanc  { background: #F1EFE8; color: #5F5E5A; }
+  .mt-porte    { background: #E6F1FB; color: #185FA5; }
+
+  /* REAJUSTES */
+  .reaj-body { padding: 20px 20px 16px; }
+  .reaj-kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+  .reaj-kpi { border-radius: 11px; padding: 12px 14px; }
+  .reaj-label { font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px; }
+  .reaj-value { font-size: 28px; font-weight: 600; line-height: 1; }
+  .reaj-sub { font-size: 10px; margin-top: 3px; opacity: 0.75; }
+  .reaj-purple { background: #EDE8F7; } .reaj-purple .reaj-label { color: #4B2888; } .reaj-purple .reaj-value { color: #3A1D6E; }
+  .reaj-c1 { background: #E6F1FB; } .reaj-c1 .reaj-label { color: #185FA5; } .reaj-c1 .reaj-value { color: #0C447C; }
+  .reaj-c2 { background: #FAEEDA; } .reaj-c2 .reaj-label { color: #854F0B; } .reaj-c2 .reaj-value { color: #633806; }
+  .reaj-c3 { background: #EAF3DE; } .reaj-c3 .reaj-label { color: #3B6D11; } .reaj-c3 .reaj-value { color: #27500A; }
+  .chart-title { font-size: 10px; font-weight: 600; color: #888780; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 12px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .bar-label { font-size: 11px; color: #5F5E5A; width: 130px; flex-shrink: 0; font-weight: 500; }
+  .bar-track { flex: 1; background: #F1EFE8; border-radius: 6px; height: 28px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; padding-left: 10px; }
+  .bar-fill span { font-size: 12px; font-weight: 600; color: #fff; }
+  .bar-num { font-size: 13px; font-weight: 600; color: #2C2C2A; width: 24px; text-align: right; flex-shrink: 0; }
+
+  /* API KPI ROW */
+  .api-kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 16px 16px 0; }
+  .api-kpi { border-radius: 11px; padding: 12px 14px; }
+  .api-kpi .kpi-label { font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 5px; }
+  .api-kpi .kpi-value { font-size: 28px; font-weight: 600; line-height: 1; }
+  .api-kpi .kpi-sub { font-size: 10px; margin-top: 3px; opacity: 0.75; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">
+    Serviços — Semana do dia 20 de Abril
+  </div>
+</div>
+
+<!-- KPI ROW: só aparece na aba Descredenciamentos -->
+<div class="kpi-row" id="kpi-descredenciamentos">
+  <div class="kpi-card kpi-blue"><div class="kpi-label">Total em aberto</div><div class="kpi-value">8</div><div class="kpi-sub">parceiros na semana</div></div>
+  <div class="kpi-card kpi-red"><div class="kpi-label">Descredenciados</div><div class="kpi-value">1</div><div class="kpi-sub">efetivados</div></div>
+  <div class="kpi-card kpi-amber"><div class="kpi-label">Em tratativa</div><div class="kpi-value">6</div><div class="kpi-sub">aguardando retorno</div></div>
+  <div class="kpi-card kpi-gray"><div class="kpi-label">Invisível no Odie</div><div class="kpi-value">5</div><div class="kpi-sub">status atual</div></div>
+  <div class="kpi-card kpi-green"><div class="kpi-label">Ativos no Odie</div><div class="kpi-value">2</div><div class="kpi-sub">status atual</div></div>
+</div>
+
+<div class="tabs-nav">
+  <button class="tab-btn active" onclick="switchTab('descredenciamentos', this)">Descredenciamentos</button>
+  <button class="tab-btn" onclick="switchTab('motivos', this)">Motivos</button>
+  <button class="tab-btn" onclick="switchTab('reajustes', this)">Reajustes do Mês</button>
+  <button class="tab-btn" onclick="switchTab('api', this)">API</button>
+</div>
+
+<!-- TAB: DESCREDENCIAMENTOS -->
+<div class="tab-pane active" id="tab-descredenciamentos">
+<div class="detail-section">
+  <div class="detail-header">Detalhamento por parceiro</div>
+  <table class="t-det">
+    <thead><tr><th>Parceiro</th><th>Data</th><th>Convênio</th><th>Status Odie</th><th>Situação</th><th>Observação</th></tr></thead>
+    <tbody>
+      <tr><td>Pet Blessed</td><td>14/03/26</td><td><span class="badge badge-conv">Plano + Banho</span></td><td><span class="badge badge-invis">Invisível</span></td><td><span class="badge badge-trat">Em tratativa</span></td><td>Santos · Aguardando retorno sobre valores de balcão</td></tr>
+      <tr><td>Hospital Vet. Titiu</td><td>06/04/26</td><td><span class="badge badge-conv">Plano + Banho</span></td><td><span class="badge badge-vis">Ativo</span></td><td><span class="badge badge-trat">Em tratativa</span></td><td>Goiânia · Pediu descredenciamento dos portes G e GG; valores de balcão solicitados</td></tr>
+      <tr><td>Clínica Espaço 4 Patas</td><td>15/04/26</td><td><span class="badge badge-conv">Plano + Banho</span></td><td><span class="badge badge-retirado">Retirado</span></td><td><span class="badge badge-desc">Descredenciado</span></td><td>São Paulo · Descredenciado em 22/04 — protocolo #16338600</td></tr>
+      <tr><td>Pataki Pakola</td><td>31/03/26</td><td><span class="badge badge-conv">Plano + Banho</span></td><td><span class="badge badge-invis">Invisível</span></td><td><span class="badge badge-trat">Em tratativa</span></td><td>São Paulo · Aceitou reajuste; ainda com dúvidas nos portes — #16157471</td></tr>
+      <tr><td>Aumivet Clínica Vet.</td><td>09/03/26</td><td><span class="badge badge-conv">Plano + Banho</span></td><td><span class="badge badge-invis">Invisível</span></td><td><span class="badge badge-trat">Em tratativa</span></td><td>Curitiba · Solicitados valores de balcão</td></tr>
+      <tr><td>Pets Home Way</td><td>02/04/26</td><td><span class="badge badge-conv">Plano + Banho</span></td><td><span class="badge badge-vis">Ativo</span></td><td><span class="badge badge-trat">Em tratativa</span></td><td>Fortaleza · Tabela de reajuste pendente</td></tr>
+      <tr><td>Pimp My Pet</td><td>17/03/26</td><td><span class="badge badge-conv">Plano + Banho</span></td><td><span class="badge badge-invis">Invisível</span></td><td><span class="badge badge-trat">Em tratativa</span></td><td>Belo Horizonte · Não retornou e-mail; abordado via WhatsApp — #15994055</td></tr>
+      <tr><td>Savana Pet</td><td>17/04/26</td><td><span class="badge badge-conv">Plano + Banho</span></td><td><span class="badge badge-invis">Invisível</span></td><td><span class="badge badge-trat">Em tratativa</span></td><td>São Luís · Motivo ainda sendo apurado</td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- TAB: MOTIVOS -->
+<div class="tab-pane" id="tab-motivos">
+<div class="detail-section">
+  <div class="detail-header">Motivos das solicitações de descredenciamento</div>
+  <table class="t-mot">
+    <thead><tr><th>Parceiro</th><th>Categoria</th><th>Motivo detalhado</th></tr></thead>
+    <tbody>
+      <tr><td>Pet Blessed</td><td><span class="motivo-tag mt-balcao">Valores de balcão</span></td><td>Parceiro solicitou descredenciamento alegando incompatibilidade com os valores de balcão praticados</td></tr>
+      <tr><td>Hospital Vet. Titiu</td><td><span class="motivo-tag mt-portes">Portes G e GG</span></td><td>Solicitou descredenciamento dos portes G e GG e pediu valores de balcão; tratativa em andamento</td></tr>
+      <tr><td>Clínica Espaço 4 Patas</td><td><span class="motivo-tag mt-balcao">Valores de balcão</span></td><td>Descredenciamento efetivado em 22/04 — protocolo #16338600</td></tr>
+      <tr><td>Pataki Pakola</td><td><span class="motivo-tag mt-reajuste">Reajuste / Portes</span></td><td>Aceitou o reajuste mas ainda tem dúvidas referentes aos portes — protocolo #16157471</td></tr>
+      <tr><td>Aumivet Clínica Vet.</td><td><span class="motivo-tag mt-balcao">Valores de balcão</span></td><td>Parceiro solicitou descredenciamento alegando incompatibilidade com os valores de balcão praticados</td></tr>
+      <tr><td>Pets Home Way</td><td><span class="motivo-tag mt-reajuste">Tabela de reajuste</span></td><td>Tabela de reajuste pendente de aprovação; parceiro aguarda retorno</td></tr>
+      <tr><td>Pimp My Pet</td><td><span class="motivo-tag mt-contato">Falta de retorno</span></td><td>Parceiro não retornou e-mail questionando o motivo; abordado via WhatsApp — protocolo #15994055</td></tr>
+      <tr><td>Savana Pet</td><td><span class="motivo-tag mt-apurando">Em apuração</span></td><td>Motivo ainda sendo apurado; aguardando retorno do parceiro</td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- TAB: REAJUSTES -->
+<div class="tab-pane" id="tab-reajustes">
+<div class="detail-section">
+  <div class="detail-header">Reajustes — Abril de 2026</div>
+  <div class="reaj-body">
+    <div class="reaj-kpi-row">
+      <div class="reaj-kpi reaj-purple"><div class="reaj-label">Total no mês</div><div class="reaj-value">19</div><div class="reaj-sub">desde 01/04</div></div>
+      <div class="reaj-kpi reaj-c1"><div class="reaj-label">Semana 06/04</div><div class="reaj-value">4</div><div class="reaj-sub">semana 1</div></div>
+      <div class="reaj-kpi reaj-c2"><div class="reaj-label">Semana 13/04</div><div class="reaj-value">8</div><div class="reaj-sub">semana 2</div></div>
+      <div class="reaj-kpi reaj-c3"><div class="reaj-label">Semana 20/04</div><div class="reaj-value">7</div><div class="reaj-sub">semana passada</div></div>
+    </div>
+    <div class="chart-title">Evolução semanal de reajustes</div>
+    <div class="bar-row">
+      <div class="bar-label">Semana 06/04</div>
+      <div class="bar-track"><div class="bar-fill" style="width:21%;background:#378ADD;"><span>4</span></div></div>
+      <div class="bar-num">4</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Semana 13/04</div>
+      <div class="bar-track"><div class="bar-fill" style="width:42%;background:#BA7517;"><span>8</span></div></div>
+      <div class="bar-num">8</div>
+    </div>
+    <div class="bar-row">
+      <div class="bar-label">Semana 20/04</div>
+      <div class="bar-track"><div class="bar-fill" style="width:37%;background:#3B6D11;"><span>7</span></div></div>
+      <div class="bar-num">7</div>
+    </div>
+    <div class="bar-row" style="margin-top:14px;padding-top:14px;border-top:1px solid #F1EFE8;">
+      <div class="bar-label" style="color:#4B2888;font-weight:600;">Total abril</div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%;background:#6B3FA0;"><span>19</span></div></div>
+      <div class="bar-num" style="color:#4B2888;font-weight:700;">19</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- TAB: API -->
+<div class="tab-pane" id="tab-api">
+<div class="detail-section">
+  <div class="detail-header">Tickets API — Semana de 17 a 27 de Abril de 2026</div>
+
+  <!-- KPI mini row -->
+  <div class="api-kpi-row">
+    <div class="api-kpi kpi-blue"><div class="kpi-label">Total de tickets</div><div class="kpi-value">8</div><div class="kpi-sub">na semana</div></div>
+    <div class="api-kpi kpi-amber"><div class="kpi-label">Em espera</div><div class="kpi-value">4</div><div class="kpi-sub">aguardando retorno</div></div>
+    <div class="api-kpi kpi-blue" style="background:#E6F1FB;"><div class="kpi-label">Abertos</div><div class="kpi-value">4</div><div class="kpi-sub">em andamento</div></div>
+  </div>
+
+  <table class="t-api" style="margin-top:12px;">
+    <thead>
+      <tr>
+        <th>Ticket</th>
+        <th>Data</th>
+        <th>Motivo</th>
+        <th>Situação</th>
+        <th>Observação / Tratativa</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>#16450598</td>
+        <td>24/04/26</td>
+        <td><span class="motivo-tag mt-negou">Negou atendimento</span></td>
+        <td><span class="badge badge-aberto">Aberto</span></td>
+        <td>Parceiro negou atendimento informando que não trabalha com a Petlove — Aguardando retorno do parceiro</td>
+      </tr>
+      <tr>
+        <td>#16436242</td>
+        <td>23/04/26</td>
+        <td><span class="motivo-tag mt-cobrou">Cobrou por fora</span></td>
+        <td><span class="badge badge-espera">Em espera</span></td>
+        <td>Porto Alegre e região · Parceiro cobrou pagamento por fora para agendar atendimento — Contato feito para alinhamento, aguardando retorno</td>
+      </tr>
+      <tr>
+        <td>#16377404</td>
+        <td>17/04/26</td>
+        <td><span class="motivo-tag mt-contato">Encaminhou p/ não credenciado</span></td>
+        <td><span class="badge badge-espera">Em espera</span></td>
+        <td>Cliente não foi atendida na hora e foi encaminhada para não credenciado — Aguardando retorno do parceiro</td>
+      </tr>
+      <tr>
+        <td>#16455589</td>
+        <td>24/04/26</td>
+        <td><span class="motivo-tag mt-tosou">Tosou em vez de desembaraçar</span></td>
+        <td><span class="badge badge-aberto">Aberto</span></td>
+        <td>Parceiro tosou o pet ao invés de desembaraçar — Aguardando retorno</td>
+      </tr>
+      <tr>
+        <td>#16438870</td>
+        <td>23/04/26</td>
+        <td><span class="motivo-tag mt-naolanc">Não lançou / banho expirou</span></td>
+        <td><span class="badge badge-espera">Em espera</span></td>
+        <td>Brasília · Parceiro não lançou e banho expirou — PX orientou parceiro a pedir ao tutor para entrar em contato · Ref. ticket #16371008</td>
+      </tr>
+      <tr>
+        <td>#16439732</td>
+        <td>23/04/26</td>
+        <td><span class="motivo-tag mt-negou">Negou atendimento</span></td>
+        <td><span class="badge badge-espera">Em espera</span></td>
+        <td>São Paulo e região · Parceiro negou atendimento informando que não trabalha com a Petlove — Aguardando retorno do parceiro</td>
+      </tr>
+      <tr>
+        <td>#16464266</td>
+        <td>25/04/26</td>
+        <td><span class="motivo-tag mt-porte">Negou por porte / lançou indevido</span></td>
+        <td><span class="badge badge-aberto">Aberto</span></td>
+        <td>Parceiro negou atendimento devido ao porte do pet ser muito grande, mas lançou atendimento como realizado — Aguardando retorno do parceiro</td>
+      </tr>
+      <tr>
+        <td>#16479517</td>
+        <td>27/04/26</td>
+        <td><span class="motivo-tag mt-negou">Negou atendimento</span></td>
+        <td><span class="badge badge-aberto">Aberto</span></td>
+        <td>Parceiro negou atendimento informando que não trabalha com a Petlove — Aguardando retorno do parceiro</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<script>
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+
+  // KPI row: só visível na aba Descredenciamentos
+  var kpi = document.getElementById('kpi-descredenciamentos');
+  kpi.style.display = (name === 'descredenciamentos') ? 'grid' : 'none';
+}
+</script>
+</body>
+</html>
